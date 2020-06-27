@@ -40,5 +40,5 @@ jobs:
       - name: Run tests
         shell: bash -l {0}
         run: |
-          cd FastAnalysis/
-          pytest tests/test_load.py
+          cd fastanalysis/
+          python -m pytest tests
