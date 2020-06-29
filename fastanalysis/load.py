@@ -38,53 +38,103 @@ class Load:
         maxObj = len(set(self.tracking.id.values))
         return maxObj
 
-    def getObject(self, iD):
-        """Get the data for the object with id.
+    def getObjects(self, ids):
+        """Get the data for the objects with ids.
 
-        :param iD: Id of the object.
-        :type index: int
-        :return: Data for the object id.
+        :param iD: Id or list of ids of objects.
+        :type index: list | int
+        :return: Data for the objects with ids.
         :rtype: DataFrame
         """
-        objectData = self.tracking[self.tracking.id == iD]
+        if isinstance(ids, list):
+            objectData = self.tracking[self.tracking.id.isin(ids)]
+        else:
+            objectData = self.tracking[self.tracking.id == ids]
         return objectData
 
-    def getFrame(self, index):
-        """Get the data for the image number index.
+    def getFrames(self, indexes):
+        """Get the data for the images with number indexes.
 
         :param index: Index of the image.
-        :type index: int
-        :return: Data for the image index.
+        :type index: list | int
+        :return: Data for the images with indexes.
         :rtype: DataFrame
         """
-        objectData = self.tracking[self.tracking.imageNumber == index]
+        if isinstance(indexes, list):
+            objectData = self.tracking[self.tracking.imageNumber.isin(indexes)]
+        else:
+            objectData = self.tracking[self.tracking.imageNumber == indexes]
         return objectData
 
-    def getObjectInFrame(self, iD, index):
-        """Get the data for an object id is in a frame index.
+    def getObjectsInFrames(self, ids, indexes):
+        """Get the data for objects ids in frames indexes.
 
-        :param iD: [Id of the object.]
-        :type iD: int
-        :param index: Index of the image.
-        :type index: int
-        :return: True if object id in frame index.
-        :rtype: bool
+        :param ids: Ids of objects.
+        :type ids: list | int
+        :param index: Indexex of images.
+        :type index: list | int
+        :return: Data for objects ids in frames indexes.
+        :rtype: Dataframe
         """
-        data = self.tracking[(self.tracking.imageNumber == index)&(self.tracking.id == iD)]
+        if not isinstance(indexes, list):
+            indexes = [indexes]
+        if not isinstance(ids, list):
+            ids = [ids]
+        data = self.tracking[(self.tracking.imageNumber.isin(indexes))&(self.tracking.id.isin(ids))]
         return data
 
-    def isObjectInFrame(self, iD, index):
+    def isObjectsInFrame(self, ids, index):
         """Check if an object id is in a frame index.
 
-        :param iD: Id of the object.
-        :type index: int
+        :param ids: Ids of objects.
+        :type ids: list | int
         :param index: Index of the image.
         :type index: int
         :return: True if object id in frame index.
         :rtype: bool
         """
-        data = self.tracking[(self.tracking.imageNumber == index)&(self.tracking.id == iD)]
-        if data.empty:
-            return False
+        isIn = []
+        if isinstance(ids, list):
+            for iD in ids:
+                data = self.tracking[(self.tracking.imageNumber == index)&(self.tracking.id == iD)]
+                if data.empty:
+                    isIn.append(False)
+                else:
+                    isIn.append(True)
+            return isIn
         else:
-            return True
+            data = self.tracking[(self.tracking.imageNumber == index)&(self.tracking.id == ids)]
+            if data.empty:
+                return False
+            else:
+                return True
+
+    def saved(self, path, delimiter='\t', keys=None, ids=None, indexes=None, fmt="csv"):
+        """Check if an object id is in a frame index.
+
+        :param path: Path to the saved file.
+        :type path: str
+        :param keys: List of features.
+        :type keys: list
+        :param ids: List of ids of object.
+        :type ids: list
+        :param indexes: List of indexes of images.
+        :type indexes: list
+        """
+        tracking = self.tracking
+        if indexes:
+            tracking = tracking[tracking.imageNumber.isin(indexes)]
+
+        if ids:
+            tracking = tracking[tracking.id.isin(ids)]
+
+        if keys:
+            tracking = tracking[keys]
+
+        if fmt == "csv":
+            tracking.to_csv(path, sep=delimiter, index=False)
+        elif fmt == "excel":
+            tracking.to_excel(path, index=False)
+
+
+

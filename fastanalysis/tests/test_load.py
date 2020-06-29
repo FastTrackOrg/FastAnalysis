@@ -20,35 +20,88 @@ def test_object_number():
     objectNumber = load.Load("tests/tracking.txt").getObjectNumber()
     assert objectNumber == 207
     
-def test_get_object():
+def test_get_objects():
     """Test get the data for an object"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
-    tracking = load.Load("tests/tracking.txt").getObject(0)
+    tracking = load.Load("tests/tracking.txt").getObjects(0)
     pandas.testing.assert_frame_equal(tracking, reference[reference.id==0])
-    tracking = load.Load("tests/tracking.txt").getObject(1)
-    pandas.testing.assert_frame_equal(tracking, reference[reference.id==1])
+    tracking = load.Load("tests/tracking.txt").getObjects([0, 1])
+    pandas.testing.assert_frame_equal(tracking, reference[(reference.id==1)|(reference.id==0)])
     
-def test_get_frame():
+def test_get_frames():
     """Test get the data for a frame"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
-    tracking = load.Load("tests/tracking.txt").getFrame(10)
+    tracking = load.Load("tests/tracking.txt").getFrames(10)
     pandas.testing.assert_frame_equal(tracking, reference[reference.imageNumber==10])
-    tracking = load.Load("tests/tracking.txt").getFrame(1)
-    pandas.testing.assert_frame_equal(tracking, reference[reference.imageNumber==1])
+    tracking = load.Load("tests/tracking.txt").getFrames([1, 10])
+    pandas.testing.assert_frame_equal(tracking, reference[(reference.imageNumber==1)|(reference.imageNumber==10)])
 
-def test_get_object_in_frame():
+def test_get_objects_in_frames():
     """Test get the data for an frame"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
-    tracking = load.Load("tests/tracking.txt").getObjectInFrame(0, 200)
+    tracking = load.Load("tests/tracking.txt").getObjectsInFrames(0, 200)
     pandas.testing.assert_frame_equal(tracking, reference[(reference.imageNumber==200)&(reference.id==0)])
-    tracking = load.Load("tests/tracking.txt").getObjectInFrame(1, 100)
-    pandas.testing.assert_frame_equal(tracking, reference[(reference.imageNumber==100)&(reference.id==1)])
+    tracking = load.Load("tests/tracking.txt").getObjectsInFrames([1, 2], [0, 100])
+    pandas.testing.assert_frame_equal(tracking, reference[((reference.imageNumber==100)|(reference.imageNumber==0))&((reference.id==1)|(reference.id==2))])
 
-def test_is_object_in_frame():
-    """Test get the data for an frame"""
+def test_is_objects_in_frame():
+    """Test check if objects in frame"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
-    tracking = load.Load("tests/tracking.txt").isObjectInFrame(0, 0)
+    tracking = load.Load("tests/tracking.txt").isObjectsInFrame(0, 0)
     assert tracking
-    tracking = load.Load("tests/tracking.txt").isObjectInFrame(0, 1500)
+    tracking = load.Load("tests/tracking.txt").isObjectsInFrame(0, 1500)
     assert not tracking
 
+def test_export_csv():
+    """Test set the data in a file"""
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    tracking = load.Load("tests/tracking.txt")
+
+    tracking.saved("tests/test.csv")
+    test = pandas.read_csv("tests/test.csv", sep='\t')
+    pandas.testing.assert_frame_equal(reference, test)
+
+    tracking.saved("tests/test.csv", delimiter=',')
+    test = pandas.read_csv("tests/test.csv", sep=',')
+    pandas.testing.assert_frame_equal(reference, test)
+    
+    tracking.saved("tests/test.csv", keys=["imageNumber"])
+    test = pandas.read_csv("tests/test.csv", sep='\t')
+    pandas.testing.assert_frame_equal(reference[["imageNumber"]], test)
+    
+    tracking.saved("tests/test.csv", indexes=[1])
+    test = pandas.read_csv("tests/test.csv", sep='\t')
+    pandas.testing.assert_frame_equal(reference[reference.imageNumber==1].reset_index(drop=True), test)
+
+    tracking.saved("tests/test.csv", ids=[0])
+    test = pandas.read_csv("tests/test.csv", sep='\t')
+    pandas.testing.assert_frame_equal(reference[reference.id==0].reset_index(drop=True), test)
+    
+    tracking.saved("tests/test.csv", ids=[0], indexes=[0])
+    test = pandas.read_csv("tests/test.csv", sep='\t')
+    pandas.testing.assert_frame_equal(reference[(reference.id==0) & (reference.imageNumber==0)].reset_index(drop=True), test)
+
+def test_export_excel():
+    """Test set the data in an excel file"""
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    tracking = load.Load("tests/tracking.txt")
+
+    tracking.saved("tests/test.xlsx", fmt="excel")
+    test = pandas.read_excel("tests/test.xlsx")
+    pandas.testing.assert_frame_equal(reference, test)
+
+    tracking.saved("tests/test.xlsx", keys=["imageNumber"], fmt="excel")
+    test = pandas.read_excel("tests/test.xlsx")
+    pandas.testing.assert_frame_equal(reference[["imageNumber"]], test)
+    
+    tracking.saved("tests/test.xlsx", indexes=[1], fmt="excel")
+    test = pandas.read_excel("tests/test.xlsx")
+    pandas.testing.assert_frame_equal(reference[reference.imageNumber==1].reset_index(drop=True), test)
+
+    tracking.saved("tests/test.xlsx", ids=[0], fmt="excel")
+    test = pandas.read_excel("tests/test.xlsx")
+    pandas.testing.assert_frame_equal(reference[reference.id==0].reset_index(drop=True), test)
+    
+    tracking.saved("tests/test.xlsx", ids=[0], indexes=[0], fmt="excel")
+    test = pandas.read_excel("tests/test.xlsx")
+    pandas.testing.assert_frame_equal(reference[(reference.id==0) & (reference.imageNumber==0)].reset_index(drop=True), test)

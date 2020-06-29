@@ -8,7 +8,7 @@ setup(
     description="A python library to open the tracking data from FastTrack the tracking software",
     url="https://github.com/FastTrackOrg/FastAnalysis",
     packages=['fastanalysis'],
-    install_requires=['pandas', 'numpy', 'matplotlib'],
+    install_requires=['pandas', 'numpy', 'matplotlib', 'xlrd', 'openpyxl'],
     license='MIT',
     python_requires='>=3.6',
     zip_safe=False
