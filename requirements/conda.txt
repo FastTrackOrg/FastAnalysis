@@ -1,3 +1,6 @@
 pandas
 xlrd
 openpyxl
+matplotlib
+seaborn
+numpy

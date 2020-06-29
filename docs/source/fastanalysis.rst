@@ -7,7 +7,12 @@ Submodules
 fastanalysis module
 -----------------------------
 
-.. automodule:: fastanalysis.load
+.. autoclass:: fastanalysis.load.Load
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. autoclass:: fastanalysis.plot.Plot
     :members:
     :undoc-members:
     :show-inheritance:

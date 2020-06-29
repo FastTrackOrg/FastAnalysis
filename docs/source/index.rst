@@ -6,6 +6,18 @@
 Welcome to FastAnalysis's documentation!
 ========================================
 
+Introduction
+########################################
+FastAnalysis is a python module to load, export and analyse the output files of FastTrack software.
+
+Installation
+########################################
+.. code-block::
+
+   git clone https://github.com/FastTrackOrg/FastAnalysis.git
+   cd FastAnalysis
+   pip install -U .
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

@@ -43,3 +43,15 @@
  fa.saved("output.txt", delimiter='\t', keys=None, ids=None, indexes=None, format="excel") # Saved all thefeatures for all the frames and all the objects in an csv file.
  ```
  Two format are supported: csv and excel.
+ 
+ ### Plot metrics
+ ```
+ import fastanalysis as fa
+ import matplotlib.pyplot as plt
+ 
+ tracking = fa.Load("tracking.txt")
+ plotObj = fa.Plot(tracking)
+ plotObj.velocityDistribution(ids=[0, 1], key="Body", pooled=False, subplots=True) # Plot velocity distribution for objects 1 and 0 in 2 subplots
+ plotObj.velocityDistribution(ids=[0, 1], key="Body", pooled=False, subplots=False) # Plot velocity distribution for objects 1 and 0 in 1 plot
+ plotObj.velocityDistribution(ids=[0, 1], key="Body", pooled=True) # Plot velocity distribution for objects 1 and 0 pooled in 1 distribution
+ ```
