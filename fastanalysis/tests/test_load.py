@@ -19,7 +19,18 @@ def test_object_number():
     """Test number of objects."""
     objectNumber = load.Load("tests/tracking.txt").getObjectNumber()
     assert objectNumber == 207
-    
+
+def test_get_keys():
+    """Test get list of keys."""
+    keys = load.Load("tests/tracking.txt").getKeys()
+    assert keys == ["xHead", "yHead", "tHead", "xTail", "yTail", "tTail", "xBody", "yBody", "tBody", "curvature", "areaBody", "perimeterBody", "headMajorAxisLength", "headMinorAxisLength", "headExcentricity", "tailMajorAxisLength", "tailMinorAxisLength", "tailExcentricity", "bodyMajorAxisLength", "bodyMinorAxisLength", "bodyExcentricity", "imageNumber", "id"]
+
+def test_data_keys():
+    """Test get data from list of keys."""
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    pandas.testing.assert_frame_equal(load.Load("tests/tracking.txt").getDataKeys(["yHead", "tHead"]), reference[["yHead", "tHead"]])
+    pandas.testing.assert_frame_equal(load.Load("tests/tracking.txt").getDataKeys("yHead"), reference[["yHead"]])
+
 def test_get_objects():
     """Test get the data for an object"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')

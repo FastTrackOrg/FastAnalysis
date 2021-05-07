@@ -29,6 +29,27 @@ class Load:
         else:
             return self.tracking
 
+    def getKeys(self):
+        """Get the list of keys of the tracking data.
+
+        :return: Keys
+        :rtype: List
+        """
+        return self.tracking.keys().tolist()
+
+    def getDataKeys(self, keys):
+        """Get the tracking data in a pandas DataFrame format.
+
+        :raises Exception: The selected file is empty
+        :return: Tracking data
+        :rtype: DataFrame
+        """
+        if isinstance(keys, list):
+            data = self.tracking[keys]
+        else:
+            data = self.tracking[[keys]]
+        return data
+
     def getObjectNumber(self):
         """Get the total number of objects in the tracking file.
 

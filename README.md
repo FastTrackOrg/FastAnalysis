@@ -9,7 +9,7 @@
  ```
  git clone https://github.com/FastTrackOrg/FastAnalysis.git
  cd FastAnalysis
- pip install fastanalysis
+ pip install .
  ```
  
  ## Development
