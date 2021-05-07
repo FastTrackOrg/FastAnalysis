@@ -5,7 +5,7 @@ class Load:
     """Base class to load tracking.txt files"""
     
     def __init__(self, path):
-        """Constructor for Load class.
+        """Constructor for the Load tracking object.
 
         :param path: Path to the tracking.txt file.
         :type path: str
@@ -18,7 +18,7 @@ class Load:
             raise e
 
     def getDataframe(self):
-        """Get the tracking data in a DataFrame.
+        """Get the tracking data in a pandas DataFrame format.
 
         :raises Exception: The selected file is empty
         :return: Tracking data
@@ -30,7 +30,7 @@ class Load:
             return self.tracking
 
     def getObjectNumber(self):
-        """Get the total number of objects.
+        """Get the total number of objects in the tracking file.
 
         :return: [Total number of objects]
         :rtype: [int]
@@ -39,7 +39,7 @@ class Load:
         return maxObj
 
     def getObjects(self, ids):
-        """Get the data for the objects with ids.
+        """Get the tracking data for a list of objects.
 
         :param iD: Id or list of ids of objects.
         :type index: list | int
@@ -53,10 +53,10 @@ class Load:
         return objectData
 
     def getFrames(self, indexes):
-        """Get the data for the images with number indexes.
+        """Get the tracking data for a list of images.
 
-        :param index: Index of the image.
-        :type index: list | int
+        :param indexes: Indexes of the images.
+        :type indexes: list | int
         :return: Data for the images with indexes.
         :rtype: DataFrame
         """
@@ -67,7 +67,7 @@ class Load:
         return objectData
 
     def getObjectsInFrames(self, ids, indexes):
-        """Get the data for objects ids in frames indexes.
+        """Get the tracking data for a list of objects in a list of frames.
 
         :param ids: Ids of objects.
         :type ids: list | int
@@ -84,7 +84,7 @@ class Load:
         return data
 
     def isObjectsInFrame(self, ids, index):
-        """Check if an object id is in a frame index.
+        """Check if a list of object is in a frame.
 
         :param ids: Ids of objects.
         :type ids: list | int
@@ -109,8 +109,8 @@ class Load:
             else:
                 return True
 
-    def saved(self, path, delimiter='\t', keys=None, ids=None, indexes=None, fmt="csv"):
-        """Check if an object id is in a frame index.
+    def export(self, path, delimiter='\t', keys=None, ids=None, indexes=None, fmt="csv"):
+        """Export the tracking data.
 
         :param path: Path to the saved file.
         :type path: str
@@ -135,6 +135,3 @@ class Load:
             tracking.to_csv(path, sep=delimiter, index=False)
         elif fmt == "excel":
             tracking.to_excel(path, index=False)
-
-
-

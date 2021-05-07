@@ -57,27 +57,27 @@ def test_export_csv():
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
     tracking = load.Load("tests/tracking.txt")
 
-    tracking.saved("tests/test.csv")
+    tracking.export("tests/test.csv")
     test = pandas.read_csv("tests/test.csv", sep='\t')
     pandas.testing.assert_frame_equal(reference, test)
 
-    tracking.saved("tests/test.csv", delimiter=',')
+    tracking.export("tests/test.csv", delimiter=',')
     test = pandas.read_csv("tests/test.csv", sep=',')
     pandas.testing.assert_frame_equal(reference, test)
     
-    tracking.saved("tests/test.csv", keys=["imageNumber"])
+    tracking.export("tests/test.csv", keys=["imageNumber"])
     test = pandas.read_csv("tests/test.csv", sep='\t')
     pandas.testing.assert_frame_equal(reference[["imageNumber"]], test)
     
-    tracking.saved("tests/test.csv", indexes=[1])
+    tracking.export("tests/test.csv", indexes=[1])
     test = pandas.read_csv("tests/test.csv", sep='\t')
     pandas.testing.assert_frame_equal(reference[reference.imageNumber==1].reset_index(drop=True), test)
 
-    tracking.saved("tests/test.csv", ids=[0])
+    tracking.export("tests/test.csv", ids=[0])
     test = pandas.read_csv("tests/test.csv", sep='\t')
     pandas.testing.assert_frame_equal(reference[reference.id==0].reset_index(drop=True), test)
     
-    tracking.saved("tests/test.csv", ids=[0], indexes=[0])
+    tracking.export("tests/test.csv", ids=[0], indexes=[0])
     test = pandas.read_csv("tests/test.csv", sep='\t')
     pandas.testing.assert_frame_equal(reference[(reference.id==0) & (reference.imageNumber==0)].reset_index(drop=True), test)
 
@@ -86,22 +86,22 @@ def test_export_excel():
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
     tracking = load.Load("tests/tracking.txt")
 
-    tracking.saved("tests/test.xlsx", fmt="excel")
+    tracking.export("tests/test.xlsx", fmt="excel")
     test = pandas.read_excel("tests/test.xlsx")
     pandas.testing.assert_frame_equal(reference, test)
 
-    tracking.saved("tests/test.xlsx", keys=["imageNumber"], fmt="excel")
+    tracking.export("tests/test.xlsx", keys=["imageNumber"], fmt="excel")
     test = pandas.read_excel("tests/test.xlsx")
     pandas.testing.assert_frame_equal(reference[["imageNumber"]], test)
     
-    tracking.saved("tests/test.xlsx", indexes=[1], fmt="excel")
+    tracking.export("tests/test.xlsx", indexes=[1], fmt="excel")
     test = pandas.read_excel("tests/test.xlsx")
     pandas.testing.assert_frame_equal(reference[reference.imageNumber==1].reset_index(drop=True), test)
 
-    tracking.saved("tests/test.xlsx", ids=[0], fmt="excel")
+    tracking.export("tests/test.xlsx", ids=[0], fmt="excel")
     test = pandas.read_excel("tests/test.xlsx")
     pandas.testing.assert_frame_equal(reference[reference.id==0].reset_index(drop=True), test)
     
-    tracking.saved("tests/test.xlsx", ids=[0], indexes=[0], fmt="excel")
+    tracking.export("tests/test.xlsx", ids=[0], indexes=[0], fmt="excel")
     test = pandas.read_excel("tests/test.xlsx")
     pandas.testing.assert_frame_equal(reference[(reference.id==0) & (reference.imageNumber==0)].reset_index(drop=True), test)

@@ -38,9 +38,9 @@
  import fastanalysis as fa
  
  tracking = fa.Load("tracking.txt")
- keys = fa.keys() # List saved features
- fa.saved("output.xlsx", delimiter='\t', keys=["xHead", "yHead", "imageNumber", "id"], ids=None, indexes=None, format="excel") # Saved a list of features for all the frames and all the objects in an excel file.
- fa.saved("output.txt", delimiter='\t', keys=None, ids=None, indexes=None, format="excel") # Saved all thefeatures for all the frames and all the objects in an csv file.
+ keys = fa.keys() # List export features
+ fa.export("output.xlsx", delimiter='\t', keys=["xHead", "yHead", "imageNumber", "id"], ids=None, indexes=None, format="excel") # Export a list of features for all the frames and all the objects in an excel file.
+ fa.export("output.txt", delimiter='\t', keys=None, ids=None, indexes=None, format="excel") # Export all thefeatures for all the frames and all the objects in an csv file.
  ```
  Two format are supported: csv and excel.
  
