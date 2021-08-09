@@ -6,6 +6,13 @@
  
  ## Installation
  To install the module:
+
+### From PyPi
+  ```
+  pip install fastanalysis
+  ```
+
+### From source
  ```
  git clone https://github.com/FastTrackOrg/FastAnalysis.git
  cd FastAnalysis
