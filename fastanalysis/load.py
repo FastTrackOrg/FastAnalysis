@@ -1,18 +1,19 @@
 import pandas
 import os
 
+
 class Load:
     """Base class to load tracking.txt files"""
-    
+
     def __init__(self, path):
         """Constructor for the Load tracking object.
 
         :param path: Path to the tracking.txt file.
         :type path: str
-        :raises Exception 
+        :raises Exception
         """
         self.path = os.path.abspath(path)
-        try: 
+        try:
             self.tracking = pandas.read_csv(path, sep='\t')
         except Exception as e:
             raise e
@@ -101,7 +102,8 @@ class Load:
             indexes = [indexes]
         if not isinstance(ids, list):
             ids = [ids]
-        data = self.tracking[(self.tracking.imageNumber.isin(indexes))&(self.tracking.id.isin(ids))]
+        data = self.tracking[(self.tracking.imageNumber.isin(
+            indexes)) & (self.tracking.id.isin(ids))]
         return data
 
     def isObjectsInFrame(self, ids, index):
@@ -117,20 +119,23 @@ class Load:
         isIn = []
         if isinstance(ids, list):
             for iD in ids:
-                data = self.tracking[(self.tracking.imageNumber == index)&(self.tracking.id == iD)]
+                data = self.tracking[(self.tracking.imageNumber == index) & (
+                    self.tracking.id == iD)]
                 if data.empty:
                     isIn.append(False)
                 else:
                     isIn.append(True)
             return isIn
         else:
-            data = self.tracking[(self.tracking.imageNumber == index)&(self.tracking.id == ids)]
+            data = self.tracking[(self.tracking.imageNumber == index) & (
+                self.tracking.id == ids)]
             if data.empty:
                 return False
             else:
                 return True
 
-    def export(self, path, delimiter='\t', keys=None, ids=None, indexes=None, fmt="csv"):
+    def export(self, path, delimiter='\t', keys=None,
+               ids=None, indexes=None, fmt="csv"):
         """Export the tracking data.
 
         :param path: Path to the saved file.

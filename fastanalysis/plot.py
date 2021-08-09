@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 class Plot:
     """Base class for plotting"""
 
@@ -14,7 +15,8 @@ class Plot:
         """
         self.data = loadObject.getDataframe()
 
-    def velocityDistribution(self, ids, indexes=None, key="Body", pooled=True, subplots=False):
+    def velocityDistribution(self, ids, indexes=None,
+                             key="Body", pooled=True, subplots=False):
         """Plot the velocity distribution.
 
         :param ids: Ids of objects.
@@ -34,17 +36,23 @@ class Plot:
             indexes = (0, len(self.data.imageNumber.values))
         if pooled:
             subplots = False
-            tmpData = self.data[(self.data.id == ids[0])&(self.data.imageNumber.isin(range(indexes[0], indexes[1])))]
-            pooledData = (np.sqrt(np.diff(tmpData["x"+key].values)**2 + np.diff(tmpData["y"+key].values)**2)) / np.diff(tmpData.imageNumber.values)
+            tmpData = self.data[(self.data.id == ids[0]) & (
+                self.data.imageNumber.isin(range(indexes[0], indexes[1])))]
+            pooledData = (np.sqrt(np.diff(tmpData["x" + key].values)**2 + np.diff(
+                tmpData["y" + key].values)**2)) / np.diff(tmpData.imageNumber.values)
             for i in ids[1::]:
-                tmpData = self.data[(self.data.id == i)&(self.data.imageNumber.isin(range(indexes[0], indexes[1])))]
-                pooledData = np.concatenate((pooledData, (np.sqrt(np.diff(tmpData["x"+key].values)**2 + np.diff(tmpData["y"+key].values)**2)) / np.diff(tmpData.imageNumber.values)))
+                tmpData = self.data[(self.data.id == i) & (
+                    self.data.imageNumber.isin(range(indexes[0], indexes[1])))]
+                pooledData = np.concatenate((pooledData, (np.sqrt(np.diff(
+                    tmpData["x" + key].values)**2 + np.diff(tmpData["y" + key].values)**2)) / np.diff(tmpData.imageNumber.values)))
             outputData = [pooledData]
         else:
             data = []
             for i in ids:
-                tmpData = self.data[(self.data.id == i)&(self.data.imageNumber.isin(range(indexes[0], indexes[1])))]
-                data.append((np.sqrt(np.diff(tmpData["x"+key].values)**2 + np.diff(tmpData["y"+key].values)**2)) / np.diff(tmpData.imageNumber.values))
+                tmpData = self.data[(self.data.id == i) & (
+                    self.data.imageNumber.isin(range(indexes[0], indexes[1])))]
+                data.append((np.sqrt(np.diff(tmpData["x" + key].values)**2 + np.diff(
+                    tmpData["y" + key].values)**2)) / np.diff(tmpData.imageNumber.values))
             outputData = data
 
         if subplots:
