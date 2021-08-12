@@ -24,6 +24,12 @@ def test_object_number():
     assert objectNumber == 207
 
 
+def test_object_ids():
+    """Test number of objects."""
+    objectNumber = load.Load("tests/tracking.txt").getIds()
+    assert objectNumber == list(range(207))
+
+
 def test_get_keys():
     """Test get list of keys."""
     keys = load.Load("tests/tracking.txt").getKeys()

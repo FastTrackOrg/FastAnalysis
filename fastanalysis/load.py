@@ -60,6 +60,15 @@ class Load:
         maxObj = len(set(self.tracking.id.values))
         return maxObj
 
+    def getIds(self):
+        """Get the list of object's IDs.
+
+        :return: [List of IDs]
+        :rtype: [int]
+        """
+        obj = list(set(self.tracking.id.values))
+        return obj
+
     def getObjects(self, ids):
         """Get the tracking data for a list of objects.
 
