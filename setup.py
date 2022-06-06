@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="fastanalysis",
-    version="0.0.1",
+    version="0.0.2",
     author="Benjamin Gallois",
     author_email="benjamin.gallois@fasttrack.sh",
     description="A python library to open the tracking data from FastTrack the tracking software",

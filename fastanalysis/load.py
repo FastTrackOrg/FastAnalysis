@@ -1,4 +1,5 @@
 import pandas
+import sqlite3
 import os
 
 
@@ -8,13 +9,19 @@ class Load:
     def __init__(self, path):
         """Constructor for the Load tracking object.
 
-        :param path: Path to the tracking.txt file.
+        :param path: Path to the tracking.txt/tracking.db file.
         :type path: str
+        :type path: float
         :raises Exception
         """
         self.path = os.path.abspath(path)
         try:
-            self.tracking = pandas.read_csv(path, sep='\t')
+            if ".txt" in self.path:
+                self.tracking = pandas.read_csv(path, sep='\t')
+            else:
+                cnx = sqlite3.connect(self.path)
+                self.tracking = pandas.read_sql_query("SELECT * FROM tracking", cnx)
+                cnx.close()
         except Exception as e:
             raise e
 

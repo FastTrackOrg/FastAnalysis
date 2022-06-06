@@ -10,6 +10,11 @@ def test_load_file():
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
     pandas.testing.assert_frame_equal(tracking, reference)
 
+def test_load_database():
+    """Test that file is loaded as a dataframe."""
+    tracking = load.Load("tests/tracking.db").getDataframe()
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    pandas.testing.assert_frame_equal(tracking, reference)
 
 def test_load_file_error():
     """Test that wrong path lead to Exception."""
@@ -20,14 +25,16 @@ def test_load_file_error():
 
 def test_object_number():
     """Test number of objects."""
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
     objectNumber = load.Load("tests/tracking.txt").getObjectNumber()
-    assert objectNumber == 207
+    assert objectNumber == reference.id.max() + 1
 
 
 def test_object_ids():
     """Test number of objects."""
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
     objectNumber = load.Load("tests/tracking.txt").getIds()
-    assert objectNumber == list(range(207))
+    assert objectNumber == list(set(reference.id))
 
 
 def test_get_keys():
