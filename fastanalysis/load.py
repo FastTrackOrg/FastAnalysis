@@ -1,20 +1,29 @@
 import pandas
+import sqlite3
 import os
 
 
 class Load:
     """Base class to load tracking.txt files"""
 
-    def __init__(self, path):
+    def __init__(self, path, framerate=25):
         """Constructor for the Load tracking object.
 
-        :param path: Path to the tracking.txt file.
+        :param path: Path to the tracking.txt/tracking.db file.
         :type path: str
+        :param framerate: Framerate of the video recording.
+        :type path: float
         :raises Exception
         """
         self.path = os.path.abspath(path)
         try:
-            self.tracking = pandas.read_csv(path, sep='\t')
+            if ".txt" in self.path:
+                self.tracking = pandas.read_csv(path, sep='\t')
+            else:
+                cnx = sqlite3.connect(self.path)
+                self.tracking = pandas.read_sql_query("SELECT * FROM tracking", cnx)
+                cnx.close()
+            self.tracking.set_index(pandas.TimedeltaIndex(self.tracking.imageNumber/framerate, unit='s'), inplace=True)
         except Exception as e:
             raise e
 

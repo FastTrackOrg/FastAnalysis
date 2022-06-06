@@ -6,10 +6,17 @@ import load
 
 def test_load_file():
     """Test that file is loaded as a dataframe."""
-    tracking = load.Load("tests/tracking.txt").getDataframe()
+    tracking = load.Load("tests/tracking.txt", 30).getDataframe()
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    reference.set_index(pandas.TimedeltaIndex(reference.imageNumber/30, unit='s'), inplace=True)
     pandas.testing.assert_frame_equal(tracking, reference)
 
+def test_load_database():
+    """Test that file is loaded as a dataframe."""
+    tracking = load.Load("tests/tracking.db").getDataframe()
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    reference.set_index(pandas.TimedeltaIndex(reference.imageNumber/25, unit='s'), inplace=True)
+    pandas.testing.assert_frame_equal(tracking, reference)
 
 def test_load_file_error():
     """Test that wrong path lead to Exception."""
@@ -20,14 +27,16 @@ def test_load_file_error():
 
 def test_object_number():
     """Test number of objects."""
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
     objectNumber = load.Load("tests/tracking.txt").getObjectNumber()
-    assert objectNumber == 207
+    assert objectNumber == reference.id.max() + 1
 
 
 def test_object_ids():
     """Test number of objects."""
+    reference = pandas.read_csv("tests/tracking.txt", sep='\t')
     objectNumber = load.Load("tests/tracking.txt").getIds()
-    assert objectNumber == list(range(207))
+    assert objectNumber == list(set(reference.id))
 
 
 def test_get_keys():
@@ -62,6 +71,7 @@ def test_get_keys():
 def test_data_keys():
     """Test get data from list of keys."""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    reference.set_index(pandas.TimedeltaIndex(reference.imageNumber/25, unit='s'), inplace=True)
     pandas.testing.assert_frame_equal(load.Load(
         "tests/tracking.txt").getDataKeys(["yHead", "tHead"]), reference[["yHead", "tHead"]])
     pandas.testing.assert_frame_equal(
@@ -71,6 +81,7 @@ def test_data_keys():
 def test_get_objects():
     """Test get the data for an object"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    reference.set_index(pandas.TimedeltaIndex(reference.imageNumber/25, unit='s'), inplace=True)
     tracking = load.Load("tests/tracking.txt").getObjects(0)
     pandas.testing.assert_frame_equal(tracking, reference[reference.id == 0])
     tracking = load.Load("tests/tracking.txt").getObjects([0, 1])
@@ -81,6 +92,7 @@ def test_get_objects():
 def test_get_frames():
     """Test get the data for a frame"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    reference.set_index(pandas.TimedeltaIndex(reference.imageNumber/25, unit='s'), inplace=True)
     tracking = load.Load("tests/tracking.txt").getFrames(10)
     pandas.testing.assert_frame_equal(
         tracking, reference[reference.imageNumber == 10])
@@ -92,6 +104,7 @@ def test_get_frames():
 def test_get_objects_in_frames():
     """Test get the data for an frame"""
     reference = pandas.read_csv("tests/tracking.txt", sep='\t')
+    reference.set_index(pandas.TimedeltaIndex(reference.imageNumber/25, unit='s'), inplace=True)
     tracking = load.Load("tests/tracking.txt").getObjectsInFrames(0, 200)
     pandas.testing.assert_frame_equal(tracking, reference[(
         reference.imageNumber == 200) & (reference.id == 0)])
